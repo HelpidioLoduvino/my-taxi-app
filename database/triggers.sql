@@ -1,3 +1,4 @@
+
 CREATE FUNCTION insert_motorista_utilizador()
     RETURNS TRIGGER AS $$
 BEGIN
