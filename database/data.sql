@@ -8,4 +8,5 @@ values ('Jorge Filas', 'filas@gmail.com', '123', '2001-12-12', 'CLIENTE',ST_SetS
        ('Andre Lucamba', 'andre@gmail.com', '123', '2001-12-12', 'MOTORISTA',ST_SetSRID(st_makepoint( 223.122, 123.452),4326));
 
 
+insert into pedido()
 select * from motorista;

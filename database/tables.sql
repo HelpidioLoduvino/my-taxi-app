@@ -17,7 +17,7 @@ drop type if exists status_pedido;
 drop type if exists status_motorista;
 drop type if exists tipo_utilizador;
 
-create type status_pedido as ENUM ('FINALIZADO','EM_ATENDIENTO','DISPONIVEL');
+create type status_pedido as ENUM ('FINALIZADO','EM_ATENDIENTO','DISPONIVEL','CRIADO');
 create type status_motorista as ENUM ('DISPONIVEL','OCUPADO');
 create type tipo_utilizador as ENUM ('CLIENTE','MOTORISTA');
 
@@ -29,7 +29,7 @@ create table utilizador
     password        varchar(100)    not null,
     data_nascimento date            not null,
     tipo            tipo_utilizador not null,
-    localizacao     geometry(Point,4326)
+    localizacao     geometry(Point, 4326)
 );
 
 
@@ -65,12 +65,10 @@ create table viatura
 create table pedido
 (
     id         serial primary key,
-    x_origem   float,
-    y_origem   float,
-    x_destino  float,
-    y_destino  float,
+    destino    geometry(Point, 4326),
+    origem     geometry(Point, 4326),
     id_cliente int not null,
-    estado     status_pedido
+    estado     status_pedido default 'CRIADO'
 );
 
 create table pedido_reserva
