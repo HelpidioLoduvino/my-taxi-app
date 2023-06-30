@@ -43,7 +43,7 @@ create table motorista
 (
     id            serial primary key,
     id_utilizador int references utilizador (id),
-    estado        status_motorista
+    estado        status_motorista default 'DISPONIVEL'
 );
 
 create table categoria_viatura
