@@ -1,5 +1,7 @@
 drop database my_taxi_db;
 
+CREATE EXTENSION IF NOT EXISTS postgis;
+
 create database my_taxi_db;
 
 drop table if exists viatura;
@@ -27,8 +29,7 @@ create table utilizador
     password        varchar(100)    not null,
     data_nascimento date            not null,
     tipo            tipo_utilizador not null,
-    x               float,
-    y               float
+    localizacao     geometry(Point,4326)
 );
 
 
