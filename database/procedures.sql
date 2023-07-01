@@ -26,4 +26,3 @@ END;
 $$ LANGUAGE plpgsql;
 
 select * from get_pedidos_proximos(2);
- 
