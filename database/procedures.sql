@@ -4,6 +4,7 @@ drop function get_pedidos_proximos(id_motorista integer);
 
 CREATE OR REPLACE FUNCTION get_pedidos_proximos(id_motorista integer)
     RETURNS TABLE (
+                      pedido_id int,
                       nome varchar(100),
                       origem geometry,
                       destino geometry
@@ -11,7 +12,7 @@ CREATE OR REPLACE FUNCTION get_pedidos_proximos(id_motorista integer)
 AS $$
 BEGIN
 
-    return query SELECT u.nome, p.origem, p.destino
+    return query SELECT p.id,u.nome, p.origem, p.destino
     FROM pedido p
              inner join cliente c on c.id = p.id_cliente
              inner join utilizador u on u.id = c.id_utilizador
