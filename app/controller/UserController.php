@@ -15,9 +15,9 @@ class UserController {
         header('Location: ../view/ClientView.php');
     }
 
-    public function criarUtilizador(User $user) {
+    public function criarUtilizador(User $user, $localizacao_x, $localizacao_y) {
 
-        $this->userRepository->inserirUtilizador($user);
+        $this->userRepository->inserirUtilizador($user, $localizacao_x, $localizacao_y );
     }
 
     public function getTripClosedBy($id_cliente, $origem_x, $origem_y, $destino_x, $destino_y) {

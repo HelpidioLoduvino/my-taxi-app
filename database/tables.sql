@@ -29,8 +29,11 @@ create table utilizador
     password        varchar(100)    not null,
     data_nascimento date            not null,
     tipo            tipo_utilizador not null,
+    morada			varchar(100)	not null,
     localizacao     geometry(Point, 4326)
 );
+
+select * from utilizador ;
 
 
 create table cliente

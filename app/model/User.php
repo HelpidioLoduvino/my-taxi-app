@@ -9,7 +9,7 @@ class User {
     private $data_nascimento;
     private $tipo;
     private $password;
-
+    
     public function getId() {
         return $this->id;
     }
@@ -65,4 +65,5 @@ class User {
     public function setPassword($password): void {
         $this->password = $password;
     }
+
 }
