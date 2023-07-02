@@ -2,6 +2,8 @@
 
 require_once '../model/UserRepository.php';
 include_once '../model/User.php';
+include_once '../model/BuscarCliente.php';
+require_once '../model/Pedido.php';
 
 class UserController {
 
@@ -30,6 +32,10 @@ class UserController {
     
     public function callAceitarPedido($pedido_id){
         $this->userRepository->aceitarPedido($pedido_id);
+    }
+    
+    public function catchClient(){
+        return $this->userRepository->buscarClienteAceite();
     }
 
     public function entrar($email, $password) {

@@ -33,8 +33,10 @@ create table utilizador
     localizacao     geometry(Point, 4326)
 );
 
-select * from utilizador ;
+select u.nome ,u.localizacao  from pedido p inner join viagem v on p.id = v.id_pedido
+           inner join utilizador u on  u.id =p.id_cliente where v.id_motorista=7 order by v.data_inicio asc limit 1;
 
+          select * from utilizador;
 
 create table cliente
 (

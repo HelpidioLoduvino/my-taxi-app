@@ -2,7 +2,9 @@
 require_once '../controller/UserController.php';
 require_once '../model/Pedido.php';
 include_once '../model/User.php';
+include_once '../model/BuscarCliente.php';
 $userController = new UserController();
+session_start();
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,6 +15,9 @@ $userController = new UserController();
         <link rel="stylesheet" href="../content/css/style.css"/>
     </head>
     <body>
+        <?php
+        $isLoggedIn = isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'MOTORISTA';
+        ?>
         <nav class="navbar navbar-dark bg-dark">
             <a class="navbar-brand" href="#">Taxi</a>
             <div class="">
@@ -20,6 +25,9 @@ $userController = new UserController();
                 <ul class="navbar-nav ml-2 flex-row">
                     <li class="nav-item ">
                         <a class="nav-link mr-2" data-target="#verPedido">Ver Pedidos</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link mr-2" data-target="#buscarCliente">Buscar Cliente</a>
                     </li>
                     <li class="nav-item ">
                         <a class="nav-link mr-2" data-target="#emAndamento">Em Andamaneto</a>
@@ -93,6 +101,46 @@ $userController = new UserController();
                     </div>
                     <?php
                     if (isset($_POST['finalizar_corrida'])) {
+                        
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="buscarCliente" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h5>A Busca Do Cliente</h5>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nome do Cliente</th>
+                                    <th>localizacao</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $buscar_cliente = $userController->catchClient();
+                                
+                                if($buscar_cliente){
+                                    echo "<tr>";
+                                    echo "<td>" . $buscar_cliente->getNome() . "</td>";
+                                    echo "<td>" . $buscar_cliente->getLocalizacao() . "</td>";
+                                    echo '<form method="POST">';
+                                    echo '<td><button class="btn btn-outline-warning"  name="iniciar_corrida">Iniciar Viagem</button></td>';
+                                    echo '</form>';
+                                    echo "</tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <?php
+                    if (isset($_POST['iniciar_corrida'])) {
                         
                     }
                     ?>
@@ -175,6 +223,6 @@ $userController = new UserController();
         </div>
 
         <script src="../content/bootstrap/script/bootstrap.min.js"></script>
-        <script src="../content/scripts/driverModal.js"></script>
+        <script src="../content/scripts/modalDriver.js"></script>
     </body>
 </html>
