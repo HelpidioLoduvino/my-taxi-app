@@ -36,10 +36,10 @@ class UserController {
         $user = $this->userRepository->login($email, $password);
         if ($user) {
             $tipo = $user->getTipo();
-            echo $tipo;
+            $id = $user->getId();
             session_start();
             $_SESSION['tipo'] = $tipo;
-
+            $_SESSION['id'] = $id;
             switch ($tipo) {
                 case 'MOTORISTA':
                     header('Location: ../view/DriverView.php');

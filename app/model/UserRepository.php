@@ -40,7 +40,7 @@ class UserRepository {
             $stmt->execute();
 
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
+            
             if ($user) {
                 $obj = new User();
                 $obj->setId($user['id']);
@@ -49,6 +49,7 @@ class UserRepository {
                 $obj->setTipo($user['tipo']);
                 $obj->setData_nascimento($user['data_nascimento']);
                 $obj->setMorada($user['morada']);
+                $obj->setPassword($user['password']);
                 return $obj;
             }
             return null;
@@ -62,7 +63,7 @@ class UserRepository {
 
         $query = 'INSERT INTO pedido (origem, destino, id_cliente) VALUES (st_setsrid(st_makepoint(' .
                 $origem_x . ',' . $origem_y . '), 4326), st_setsrid(st_makepoint(' .
-                $destino_x . ',' . $destino_y . '), 4326), 1);';
+                $destino_x . ',' . $destino_y . '), 4326), '.$id_cliente.');';
 
         $stmt = $this->db->prepare($query);
         $stmt->execute();

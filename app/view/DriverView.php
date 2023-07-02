@@ -130,6 +130,16 @@ $userController = new UserController();
                                 <input type="text" name="morada" class="form-control" placeholder="Morada"><br>
                             </div>
 
+                            <label>Localizacao:</label>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" name="localizacao_x" class="form-control" placeholder="Coordenada x">
+                                </div>
+                                <div class="col">
+                                    <input type="text" name="localizacao_y" class="form-control" placeholder="Coordenada y">
+                                </div>
+                            </div><br>
+
                             <div class="col">
                                 <label for="password">Password:</label><br>
                                 <input type="password" name="password" class="form-control" placeholder="Password"><br>
@@ -145,6 +155,8 @@ $userController = new UserController();
                         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
                         $data_nascimento = filter_input(INPUT_POST, 'data_nascimento', FILTER_SANITIZE_SPECIAL_CHARS);
                         $morada = filter_input(INPUT_POST, 'morada', FILTER_SANITIZE_STRING);
+                        $localizacao_x = filter_input(INPUT_POST, 'localizacao_x');
+                        $localizacao_y = filter_input(INPUT_POST, 'localizacao_y');
                         $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
                         $user->setTipo($tipo);
@@ -154,7 +166,7 @@ $userController = new UserController();
                         $user->setMorada($morada);
                         $user->setPassword($password);
                         $userController = new UserController();
-                        $userController->criarUtilizador($user);
+                        $userController->criarUtilizador($user, $localizacao_x, $localizacao_y);
                         echo "<meta http-equiv=\"refresh\" content=\"0;\">";
                     }
                     ?>

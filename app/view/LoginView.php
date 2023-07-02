@@ -1,6 +1,5 @@
 <?php
 require_once '../controller/UserController.php';
-session_start();
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +12,7 @@ session_start();
     </head>
     <body>
         <div class="container justify-content-center">
-            <form class="POST">
+            <form method="POST">
 
                 <div class="col">
                     <label for="email">Email:</label><br>
@@ -26,6 +25,7 @@ session_start();
                 </div>
 
                 <button type="submit" class="btn btn-outline-warning" name="login">Entrar</button>
+                <a class="btn btn-outline-light" href="../view/ClientView.php">GUEST</a>
 
             </form>
         </div>

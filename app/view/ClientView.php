@@ -1,6 +1,7 @@
 <?php
 require_once '../controller/UserController.php';
 include_once '../model/User.php';
+session_start();
 ?>
 
 <!DOCTYPE html>
@@ -13,22 +14,30 @@ include_once '../model/User.php';
         <link rel="stylesheet" href="../content/css/style.css"/>
     </head>
     <body>
+        <?php
+        $isLoggedIn = isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'CLIENTE';
+        ?>
         <nav class="navbar navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-bars navbar-toggler"></i>
-            </a>
+            <a class="navbar-brand" href="#">Taxi</a>
             <div class="">
                 <ul class="navbar-nav ml-2 flex-row">
                     <li class="nav-item ">
-                        <a class="nav-link mr-2" href="LoginView.php"> 
-                            <i class="fas fa-user navbar-toggler"></i>
-                        </a>
+                        <?php if (!$isLoggedIn): ?>
+                            <a class="nav-link mr-2" href="LoginView.php">Login</a>
+                        <?php endif; ?>
                     </li>
                     <li class="nav-item mr-2">
-                        <a class="nav-link" data-target="#registerModal"> 
-                            <i class="fas fa-arrow-left navbar-toggler"></i>
-                        </a>
+                        <?php if (!$isLoggedIn): ?>
+                            <a class="nav-link" data-target="#registerModal">Sign Up</a>
+                        <?php endif; ?>
                     </li>
+
+                    <?php if ($isLoggedIn): ?>
+                        <li class="nav-item ml-auto">
+                            <a class="nav-link" href="../action/logout.php">Logout</a>
+                        </li>
+                    <?php endif; ?>
+
                 </ul>
             </div>
         </nav>
@@ -36,8 +45,21 @@ include_once '../model/User.php';
         <div class="body-content">
             <ul class="body-items">
                 <li>
-                    <a class="nav-link" href="#"> <i class="fas fa-taxi navbar-toggler" id="taxi-icon"></i> </a>
-                    <button type="button" class="btn btn-success" data-target="#getTripModal">Solicitar</button>  
+                    <?php
+                    if ($isLoggedIn) {
+                        echo '
+                            <a class="nav-link" href="#"> <i class="fas fa-taxi navbar-toggler" id="taxi-icon"></i> </a>
+                            <button type="button" class="btn btn-success" data-target="#getTripModal">Solicitar</button> 
+                         ';
+                    } else {
+                        echo '
+                            <a class="nav-link" href="#"> <i class="fas fa-taxi navbar-toggler" id="taxi-icon"></i> </a>
+                            <a type="button" class="btn btn-success" href="../view/LoginView.php">Solicitar</a> 
+                         ';
+                    }
+                    ?>
+
+
                 </li>
             </ul>
             <hr class="bordas-dashed"/>
@@ -59,7 +81,11 @@ include_once '../model/User.php';
                     </div>
                     <div class="modal-body">
                         <form method="POST">
-                            <input type="hidden" name="id" value=" '.$user->getId().' ">
+                            <?php 
+                            echo '
+                               <input type="hidden" name="id" value="'.$_SESSION['id'].'">
+                            ';
+                            ?>
                             <label>Origem:</label>
                             <br>
                             <div class="row">
@@ -157,6 +183,7 @@ include_once '../model/User.php';
                     </div>
                     <?php
                     if (isset($_POST['inserir_cliente'])) {
+
                         $user = new User();
                         $tipo = filter_input(INPUT_POST, 'tipo', FILTER_SANITIZE_STRING);
                         $nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_STRING);
