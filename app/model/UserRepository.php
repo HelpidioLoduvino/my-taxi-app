@@ -11,18 +11,19 @@ class UserRepository {
         $this->db = DB::getConnection();
     }
 
-    public function inserirUtilizador(User $user) {
+    public function inserirUtilizador(User $user, $localizacao_x, $localizacao_y) {
         try {
-            $query = 'INSERT INTO utilizador(nome, email, tipo, data_nascimento, morada, password) VALUES (:nome, :email, :tipo, :data_nascimento, :morada, :password)';
+            $query = 'INSERT INTO utilizador(nome, email, password, data_nascimento, tipo, morada, localizacao) VALUES (:nome, :email, :password, :data_nascimento, :tipo, :morada, st_setsrid(st_makepoint(:localizacao_x, :localizacao_y), 4326))';
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':nome', $user->getNome());
             $stmt->bindParam(':email', $user->getEmail());
-            $stmt->bindParam(':tipo', $user->getTipo());
-            $stmt->bindParam(':data_nascimento', $user->getData_nascimento());
-            $stmt->bindParam(':morada', $user->getMorada());
             $stmt->bindParam(':password', $user->getPassword());
+            $stmt->bindParam(':data_nascimento', $user->getData_nascimento());
+            $stmt->bindParam(':tipo', $user->getTipo());
+            $stmt->bindParam(':morada', $user->getMorada());  
+            $stmt->bindParam(':localizacao_x', $localizacao_x);
+            $stmt->bindParam(':localizacao_y', $localizacao_y);
             $stmt->execute();
-
             return true;
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
@@ -71,24 +72,25 @@ class UserRepository {
         $query = 'select * from get_pedidos_proximos(2)';
         $stmt = $this->db->prepare($query);
         $stmt->execute();
-        
+
         $todosPedidos = array();
-        
+
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $pedido = new Pedido();
             $pedido->setPedido_id($row["pedido_id"]);
             $pedido->setNome($row["nome"]);
             $pedido->setOrigem($row["origem"]);
             $pedido->setDestino($row["destino"]);
-            $todosPedidos[] = $pedido;           
+            $todosPedidos[] = $pedido;
         }
-        
+
         return $todosPedidos;
-    } 
-    
-    public function aceitarPedido($pedido_id){
-        $query = 'call iniciar_viagem(2,'.$pedido_id.')';
+    }
+
+    public function aceitarPedido($pedido_id) {
+        $query = 'call iniciar_viagem(2,' . $pedido_id . ')';
         $stmt = $this->db->prepare($query);
         $stmt->execute();
     }
+
 }
