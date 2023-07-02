@@ -14,21 +14,22 @@ values ('Jorge Filas', 'filas@gmail.com', '123', '2001-12-12', 'CLIENTE',
        ('Andre Lucamba', 'andre@gmail.com', '123', '2001-12-12', 'MOTORISTA',
         ST_SetSRID(st_makepoint(223.122, 123.452), 4326));
 
+select * from motorista;
 
 insert into pedido(origem, destino, id_cliente)
 
 VALUES (st_setsrid(st_makepoint(1223.34, 1122), 4326), st_setsrid(st_makepoint(2221.34, 1122), 4326), 1),
        (st_setsrid(st_makepoint(2223.34, 1122), 4326), st_setsrid(st_makepoint(2232.34, 1122), 4326), 2),
-       (st_setsrid(st_makepoint(1323.34, 1122), 4326), st_setsrid(st_makepoint(232.34, 1122), 4326), 3);
+       (st_setsrid(st_makepoint(1323.34, 1122), 4326), st_setsrid(st_makepoint(232.34, 1122), 4326), 1);
 
 insert into categoria_viatura(velocidade_media, fiabilidade, descricao)
 values (51.7, 8, 'JIP'),
        (21.7, 4, 'Médio porte'),
        (60, 7, 'Veloz');
+
 insert into viatura(id_categoria, id_motorista)
-VALUES (1, 1),
-       (2, 2),
-       (3, 3);
+VALUES (1, 4),
+       (2, 5);
 
 select *
 from pedido;
