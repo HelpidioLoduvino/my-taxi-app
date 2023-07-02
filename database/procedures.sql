@@ -72,12 +72,37 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+drop function get_estimativa_tempo_pegar_cliente(id_pedido int, motorista_id int);
 
-call iniciar_viagem(2, 1);
+create or replace function get_estimativa_tempo_pegar_cliente(id_pedido int,motorista_id int) returns float
+    as $$
+    declare velocidade_carro float;
+    declare result double precision;
+    BEGIN
+
+            select cv.velocidade_media into velocidade_carro from motorista m
+                     inner join viatura v on m.id = v.id_motorista
+                    inner join categoria_viatura cv on cv.id = v.id_categoria
+                     where m.id=motorista_id;
+--
+           select (st_distance(u.localizacao::geography,p.origem::geography)/1000)/velocidade_carro
+           into result from pedido p
+                 inner join motorista m on m.id=motorista_id
+                 inner join utilizador u on u.id = m.id_utilizador
+                 where p.id=id_pedido;
+
+            return result;
+    END ;
+    $$ language plpgsql;
+
+
+select * from get_estimativa_tempo_pegar_cliente(2,3) as tempo_em_hora;
+
+call iniciar_viagem(3, 1);
 select *from pedido;
 
 select *from viagem;
 
 select *from motorista;
-
+select  * from utilizador;
 call finalizar_viagem(1);
