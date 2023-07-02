@@ -71,15 +71,24 @@ class UserRepository {
         $query = 'select * from get_pedidos_proximos(2)';
         $stmt = $this->db->prepare($query);
         $stmt->execute();
+        
+        $todosPedidos = array();
+        
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo '<tr>';
-            echo "<td>" . $row["nome"] . "</td>";
-            echo "<td>" . $row["origem"] . "</td>";
-            echo "<td>" . $row["destino"] . "</td>";
-            echo '<td><button class="btn btn-warning" onclick="aceitarPedido(' . $row["pedido_id"] . ')">Aceitar</button></td>';
-     
-            echo '</tr>';
+            $pedido = new Pedido();
+            $pedido->setPedido_id($row["pedido_id"]);
+            $pedido->setNome($row["nome"]);
+            $pedido->setOrigem($row["origem"]);
+            $pedido->setDestino($row["destino"]);
+            $todosPedidos[] = $pedido;           
         }
+        
+        return $todosPedidos;
+    } 
+    
+    public function aceitarPedido($pedido_id){
+        $query = 'call iniciar_viagem(2,'.$pedido_id.')';
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
     }
-
 }

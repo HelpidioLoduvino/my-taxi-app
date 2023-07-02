@@ -25,7 +25,11 @@ class UserController {
     }
 
     public function buscarPedidosProximos() {
-        $this->userRepository->getPedidosProximos();
+        return $this->userRepository->getPedidosProximos();
+    }
+    
+    public function callAceitarPedido($pedido_id){
+        $this->userRepository->aceitarPedido($pedido_id);
     }
 
     public function entrar($email, $password) {
