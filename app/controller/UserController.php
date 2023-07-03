@@ -14,7 +14,7 @@ class UserController {
     }
 
     public function home() {
-        header('Location: ../view/ClientView.php');
+        header('Location: view/LoginView.php');
     }
 
     public function criarUtilizador(User $user, $localizacao_x, $localizacao_y) {
@@ -30,12 +30,16 @@ class UserController {
         return $this->userRepository->getPedidosProximos();
     }
     
-    public function callAceitarPedido($pedido_id){
-        $this->userRepository->aceitarPedido($pedido_id);
+    public function callAceitarPedido($id_motorista,$id_pedido){
+        $this->userRepository->aceitarPedido($id_motorista,$id_pedido);
     }
     
     public function catchClient(){
         return $this->userRepository->buscarClienteAceite();
+    }
+    
+    public function iniciarViagem($id_motorista, $id_pedido){
+        $this->userRepository->iniciarCorrida($id_motorista, $id_pedido);
     }
 
     public function entrar($email, $password) {
@@ -45,12 +49,14 @@ class UserController {
             $id = $user->getId();
             session_start();
             $_SESSION['tipo'] = $tipo;
-            $_SESSION['id'] = $id;
+            
             switch ($tipo) {
                 case 'MOTORISTA':
+                    $_SESSION['id'] = $id;
                     header('Location: ../view/DriverView.php');
                     break;
                 case 'CLIENTE':
+                    $_SESSION['id'] = $id;
                     header('Location: ../view/ClientView.php');
                     break;
             }

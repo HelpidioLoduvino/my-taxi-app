@@ -71,7 +71,7 @@ class UserRepository {
     }
 
     public function getPedidosProximos() {
-        $query = 'select * from get_pedidos_proximos(' . $_SESSION['id'] . ')';
+        $query = 'select * from get_pedidos_proximos('.$_SESSION['id'].')';
         $stmt = $this->db->prepare($query);
         $stmt->execute();
 
@@ -89,15 +89,15 @@ class UserRepository {
         return $todosPedidos;
     }
 
-    public function aceitarPedido($pedido_id) {
-        $query = 'call iniciar_viagem(2,' . $pedido_id . ')';
+    public function aceitarPedido($id_motorista, $id_pedido) {
+        $query = 'call iniciar_viagem('.$id_motorista.',' . $id_pedido . ')';
         $stmt = $this->db->prepare($query);
         $stmt->execute();
     }
 
     public function buscarClienteAceite() {
-        $query = 'select u.nome ,u.localizacao  from pedido p inner join viagem v on p.id = v.id_pedido
-           inner join utilizador u on  u.id =p.id_cliente where v.id_motorista=2 order by v.data_inicio asc limit 1';
+        $query = 'select u.nome ,u.localizacao, p.id  from pedido p inner join viagem v on p.id = v.id_pedido
+           inner join utilizador u on  u.id =p.id_cliente where v.id_motorista='.$_SESSION['id'].' order by v.data_inicio asc limit 1';
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         
@@ -105,10 +105,17 @@ class UserRepository {
         
         if($row){
             $buscar_cliente = new BuscarCliente();
+            $buscar_cliente->setPedido_id($row['id']);
             $buscar_cliente->setNome($row['nome']);
             $buscar_cliente->setLocalizacao($row['localizacao']);
             return $buscar_cliente;
         }
+    }
+    
+    public function iniciarCorrida($id_motorista, $id_pedido){
+        $query = 'call iniciar_viagem('.$id_motorista.', '.$id_pedido.')';
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
     }
 
 }

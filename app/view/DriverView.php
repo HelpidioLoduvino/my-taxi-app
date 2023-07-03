@@ -23,21 +23,35 @@ session_start();
             <div class="">
 
                 <ul class="navbar-nav ml-2 flex-row">
-                    <li class="nav-item ">
-                        <a class="nav-link mr-2" data-target="#verPedido">Ver Pedidos</a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link mr-2" data-target="#buscarCliente">Buscar Cliente</a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link mr-2" data-target="#emAndamento">Em Andamaneto</a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link mr-2" href="LoginView.php">Login</a>
-                    </li>
-                    <li class="nav-item mr-2">
-                        <a class="nav-link" data-target="#registerModal">Sign Up</a>
-                    </li>
+                    <?php if ($isLoggedIn): ?>
+                        <li class="nav-item ">
+                            <a class="nav-link mr-2" data-target="#verPedido">Ver Pedidos</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if ($isLoggedIn): ?>
+                        <li class="nav-item ">
+                            <a class="nav-link mr-2" data-target="#buscarCliente">Buscar Cliente</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if ($isLoggedIn): ?>
+                        <li class="nav-item ">
+                            <a class="nav-link mr-2" data-target="#emAndamento">Em Andamaneto</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if (!$isLoggedIn): ?>
+                        <li class="nav-item ">
+                            <a class="nav-link mr-2" href="LoginView.php">Login</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if (!$isLoggedIn): ?>
+                        <li class="nav-item mr-2">
+                            <a class="nav-link" data-target="#registerModal">Sign Up</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </nav>
@@ -67,7 +81,8 @@ session_start();
                                     echo "<td>" . $pedido->getOrigem() . "</td>";
                                     echo "<td>" . $pedido->getDestino() . "</td>";
                                     echo '<form method="POST">';
-                                    echo '<input type="hidden" name="pedido_id" value="' . $pedido->getPedido_id() . '">';
+                                    echo '<input type="hidden" name="id_pedido" value="' . $pedido->getPedido_id() . '">';
+                                    echo '<td> <input type="hidden" name="id_motorista" value=' . $_SESSION['id'] . '> </td>';
                                     echo '<td><button class="btn btn-outline-warning" name="aceitar_pedido">Aceitar</button></td>';
                                     echo "</form>";
                                     echo "</tr>";
@@ -77,8 +92,9 @@ session_start();
                         </table>
                         <?php
                         if (isset($_POST['aceitar_pedido'])) {
-                            $pedido_id = $_POST['pedido_id'];
-                            $userController->callAceitarPedido($pedido_id);
+                            $id_pedido = filter_input(INPUT_POST, 'id_pedido');
+                            $id_motorista = filter_input(INPUT_POST, 'id_motorista');
+                            $userController->callAceitarPedido($id_motorista, $id_pedido);
                             echo "<meta http-equiv=\"refresh\" content=\"0;\">";
                         }
                         ?>
@@ -112,36 +128,48 @@ session_start();
             <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
-                        <h5>A Busca Do Cliente</h5>
+                        <h5>A Busca do Cliente</h5>
                     </div>
                     <div class="modal-body">
+
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Nome do Cliente</th>
-                                    <th>localizacao</th>
+                                    <th>id</th>
+                                    <th>Nome</th>
+                                    <th>Localizacao</th>
                                 </tr>
                             </thead>
                             <tbody>
+
+
+
                                 <?php
                                 $buscar_cliente = $userController->catchClient();
-                                
-                                if($buscar_cliente){
+
+                                if ($buscar_cliente) {
                                     echo "<tr>";
+                                    echo "<td>" . $buscar_cliente->getPedido_id() . "</td>";
                                     echo "<td>" . $buscar_cliente->getNome() . "</td>";
                                     echo "<td>" . $buscar_cliente->getLocalizacao() . "</td>";
                                     echo '<form method="POST">';
-                                    echo '<td><button class="btn btn-outline-warning"  name="iniciar_corrida">Iniciar Viagem</button></td>';
-                                    echo '</form>';
+                                    echo '<input type="hidden" name="id_pedido" value="' . $buscar_cliente->getPedido_id() . '">';
+                                    echo '<td> <input type="hidden" name="id_motorista" value=' . $_SESSION['id'] . '> </td>';
+                                    echo '<td><button class="btn btn-outline-warning" name="iniciar_viagem">Iniciar Viagem</button></td>';
+                                    echo "</form>";
                                     echo "</tr>";
                                 }
                                 ?>
                             </tbody>
                         </table>
+
                     </div>
                     <?php
-                    if (isset($_POST['iniciar_corrida'])) {
-                        
+                    if (isset($_POST['iniciar_viagem'])) {
+                        $id_pedido = filter_input(INPUT_POST, 'id_pedido');
+                        $id_motorista = filter_input(INPUT_POST, 'id_motorista');
+                        $userController->iniciarViagem($id_motorista, $id_pedido);
+                        echo "<meta http-equiv=\"refresh\" content=\"0;\">";
                     }
                     ?>
                 </div>
@@ -223,6 +251,7 @@ session_start();
         </div>
 
         <script src="../content/bootstrap/script/bootstrap.min.js"></script>
-        <script src="../content/scripts/modalDriver.js"></script>
+        <script src="../content/scripts/driver.js"></script>
+        <script src="../content/scripts/driverModal.js"></script>
     </body>
 </html>

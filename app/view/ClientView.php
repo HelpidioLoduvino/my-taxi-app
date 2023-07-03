@@ -9,10 +9,9 @@ session_start();
     <head>
         <meta charset="UTF-8">
         <title>Taxi App</title>
-        <link rel="stylesheet" href="../content/css/style.css"/>
         <link rel="stylesheet" href="../content/bootstrap/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-       
+        <link rel="stylesheet" href="../content/css/style.css"/>
     </head>
     <body>
         <?php
@@ -29,7 +28,7 @@ session_start();
                     </li>
                     <li class="nav-item mr-2">
                         <?php if (!$isLoggedIn): ?>
-                            <a class="nav-link" data-target="#registerModal">Sign Up</a>
+                            <a class="nav-link" data-target="#signupModal">Sign Up</a>
                         <?php endif; ?>
                     </li>
 
@@ -135,7 +134,7 @@ session_start();
         </div>
 
         <!-- Modal to register a client -->
-        <div class="modal" id="registerModal" tabindex="-1" role="dialog">
+        <div class="modal" id="signupModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header justify-content-center">
@@ -209,7 +208,8 @@ session_start();
                 </div>
             </div>
         </div>
+
         <script src="../content/bootstrap/script/bootstrap.min.js"></script>
-        <script src="../content/scripts/modal.js"></script>
+        <script src="../content/scripts/modalClient.js"></script>
     </body>
 </html>
