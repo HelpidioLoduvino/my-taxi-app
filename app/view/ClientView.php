@@ -9,9 +9,10 @@ session_start();
     <head>
         <meta charset="UTF-8">
         <title>Taxi App</title>
+        <link rel="stylesheet" href="../content/css/style.css"/>
         <link rel="stylesheet" href="../content/bootstrap/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <link rel="stylesheet" href="../content/css/style.css"/>
+       
     </head>
     <body>
         <?php
@@ -208,7 +209,6 @@ session_start();
                 </div>
             </div>
         </div>
-
         <script src="../content/bootstrap/script/bootstrap.min.js"></script>
         <script src="../content/scripts/modal.js"></script>
     </body>

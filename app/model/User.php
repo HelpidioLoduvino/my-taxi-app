@@ -1,14 +1,14 @@
 <?php
 
 class User {
-
     private $id;
     private $nome;
     private $email;
     private $morada;
     private $data_nascimento;
-    private $tipo;
     private $password;
+    private $tipo;
+    
     
     public function getId() {
         return $this->id;
