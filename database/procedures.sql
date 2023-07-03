@@ -56,22 +56,30 @@ AS
 $$
 BEGIN
 
-    return query SELECT p.id, u.nome, p.origem, p.destino
+    return query  SELECT p.id, c.nome, p.origem, p.destino
                  FROM pedido p
-                          inner join cliente c on c.id = p.id_cliente
-                          inner join utilizador u on u.id = c.id
+                          inner join utilizador c on c.id = p.id_cliente
 
-                 WHERE p.estado = 'CRIADO'
-                 ORDER BY st_distance(p.origem, (SELECT u.localizacao
-                                                 FROM motorista m
-                                                          inner join utilizador u on u.id = m.id
-                                                 WHERE u.id = id_motorista))
+                 where p.estado = 'CRIADO'
+                 
+                 ORDER BY st_distance(p.origem, (SELECT c.localizacao
+                                             from utilizador u
+                                                WHERE u.id = id_motorista))
                  LIMIT 5;
 END;
 $$ LANGUAGE plpgsql;
 
 select *
-from get_pedidos_proximos(2);
+from get_pedidos_proximos(7);
+
+
+
+                
+    select * from pedido;
+   
+   select * from cliente;
+  
+  select * from utilizador;
 
 
 drop function iniciar_viagem(id_motorista integer, id_pedido int);
@@ -100,6 +108,8 @@ BEGIN
 
 END;
 $$ LANGUAGE plpgsql;
+
+select * from motorista;
 
 drop function finalizar_viagem(pedido_id int);
 
@@ -184,5 +194,5 @@ from viagem
 where 0 = 0;
 
 call aceitar_viagem(4, 2);
-call iniciar_viagem(4, 2);
+call iniciar_viagem(5, 2);
 select * from finalizar_viagem(2);
