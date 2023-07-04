@@ -2,7 +2,7 @@
 require_once '../controller/UserController.php';
 require_once '../model/Pedido.php';
 include_once '../model/User.php';
-include_once '../model/BuscarCliente.php';
+include_once '../model/Viagem.php';
 $userController = new UserController();
 session_start();
 ?>
@@ -47,11 +47,16 @@ session_start();
                         </li>
                     <?php endif; ?>
 
-                    <?php if (!$isLoggedIn): ?>
-                        <li class="nav-item mr-2">
-                            <a class="nav-link" data-target="#registerModal">Sign Up</a>
+                    <li class="nav-item mr-2">
+                        <a class="nav-link" data-target="#registerModal">Inserir Motorista</a>
+                    </li>
+
+                    <?php if ($isLoggedIn): ?>
+                        <li class="nav-item ml-auto">
+                            <a class="nav-link" href="../action/logout.php">Logout</a>
                         </li>
                     <?php endif; ?>
+
                 </ul>
             </div>
         </nav>
@@ -110,14 +115,46 @@ session_start();
                         <h5>Em Andamento</h5>
                     </div>
                     <div class="modal-body">
-                        <h5 class="">Em Andamento...</h5>
-                        <form method="POST">
-                            <button name="finalizar_corrida" class="btn btn-outline-dark">Finalizar Corrida</button>
-                        </form>
+                        <h5>Em Andamento...</h5>
+                        <?php 
+                        $pedido_id = $userController->verPedidoAceite();
+                       
+                            echo '<form method="POST">';
+                            echo '<input type="hidden" name="id_pedido" value="'.$pedido_id->getPedido_id().'">';
+                            echo '<button class="btn btn-outline-dark" name="finalizar_corrida">Finalizar Corriga</button>';
+                            echo '</form>';
+                     
+                        ?>     
                     </div>
                     <?php
+                    $finalizado = false;
                     if (isset($_POST['finalizar_corrida'])) {
-                        
+                        $finalizado = true;
+                        $id_pedido = filter_input(INPUT_POST, 'id_pedido');
+                        $userController->verFinalizado($id_pedido);
+                    
+                    }
+                    ?>
+
+                    <?php
+                    if ($finalizado) {
+                        $pedido_finalizado = $userController->verFinalizado($pedido_id);
+                        echo '
+                                <table class="table">
+                                <thead>
+                                <tr>
+                                <td>Preco</td>
+                                <td>Tempo Real</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                <td>"'.$pedido_finalizado->getPreco().'"</td>
+                                <td>"'.$pedido_finalizado->getTempo_real().'"</td>
+                                </tr>
+                                </tbody>
+                                </table>
+                            ';
                     }
                     ?>
                 </div>
@@ -141,16 +178,12 @@ session_start();
                                 </tr>
                             </thead>
                             <tbody>
-
-
-
                                 <?php
                                 $buscar_cliente = $userController->catchClient();
-
                                 if ($buscar_cliente) {
                                     echo "<tr>";
                                     echo "<td>" . $buscar_cliente->getPedido_id() . "</td>";
-                                    echo "<td>" . $buscar_cliente->getNome() . "</td>";
+                                    echo "<td>" . $buscar_cliente->getNomeCliente() . "</td>";
                                     echo "<td>" . $buscar_cliente->getLocalizacao() . "</td>";
                                     echo '<form method="POST">';
                                     echo '<input type="hidden" name="id_pedido" value="' . $buscar_cliente->getPedido_id() . '">';

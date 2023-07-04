@@ -1,6 +1,9 @@
 <?php
 require_once '../controller/UserController.php';
+require_once '../model/Pedido.php';
 include_once '../model/User.php';
+include_once '../model/Viagem.php';
+ $userController = new UserController();
 session_start();
 ?>
 
@@ -10,7 +13,6 @@ session_start();
         <meta charset="UTF-8">
         <title>Taxi App</title>
         <link rel="stylesheet" href="../content/bootstrap/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <link rel="stylesheet" href="../content/css/style.css"/>
     </head>
     <body>
@@ -21,6 +23,9 @@ session_start();
             <a class="navbar-brand" href="#">Taxi</a>
             <div class="">
                 <ul class="navbar-nav ml-2 flex-row">
+
+
+
                     <li class="nav-item ">
                         <?php if (!$isLoggedIn): ?>
                             <a class="nav-link mr-2" href="LoginView.php">Login</a>
@@ -31,6 +36,19 @@ session_start();
                             <a class="nav-link" data-target="#signupModal">Sign Up</a>
                         <?php endif; ?>
                     </li>
+
+                    <?php if ($isLoggedIn): ?>
+                        <li class="nav-item ml-auto">
+                            <a class="nav-link" data-target="#pedidoSolicitado">Ver Pedido</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if ($isLoggedIn): ?>
+                        <li class="nav-item ml-auto">
+                            <a class="nav-link" data-target="#listarViagem">Listar Viagens</a>
+                        </li>
+                    <?php endif; ?>
+
 
                     <?php if ($isLoggedIn): ?>
                         <li class="nav-item ml-auto">
@@ -81,9 +99,9 @@ session_start();
                     </div>
                     <div class="modal-body">
                         <form method="POST">
-                            <?php 
+                            <?php
                             echo '
-                               <input type="hidden" name="id" value="'.$_SESSION['id'].'">
+                               <input type="hidden" name="id" value="' . $_SESSION['id'] . '">
                             ';
                             ?>
                             <label>Origem:</label>
@@ -124,11 +142,61 @@ session_start();
                         $origem_y = filter_input(INPUT_POST, 'origem_y');
                         $destino_x = filter_input(INPUT_POST, 'destino_x');
                         $destino_y = filter_input(INPUT_POST, 'destino_y');
-                        $userController = new UserController();
                         $userController->getTripClosedBy($id_cliente, $origem_x, $origem_y, $destino_x, $destino_y);
                         echo "<meta http-equiv=\"refresh\" content=\"0;\">";
                     }
                     ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="pedidoSolicitado" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h5>Ver Pedido</h5>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <td>id Pedido</td>
+                                    <td>Preco</td>
+                                    <td>Nome do Motorista</td>
+                                    <td>Tempo Estimado</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
+                                $ver_pedido = $userController->verPedidoAceite();
+                                if($ver_pedido){
+                                    echo "<tr>";
+                                    echo "<td>" . $ver_pedido->getPedido_id() . "</td>";
+                                    echo "<td>" . $ver_pedido->getPreco() . "</td>";
+                                    echo "<td>" . $ver_pedido->getNomeMotorista() . "</td>";
+                                    echo "<td>" . $ver_pedido->getTempo_estimado() . "</td>";
+                                    echo "</tr>";
+                                }
+                                ?>
+                            </tbody>   
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="listarViagem" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h5>Em Andamento</h5>
+                    </div>
+                    <div class="modal-body">
+                        <h5 class="">Em Andamento...</h5>
+                        <form method="POST">
+                            <button name="finalizar_corrida" class="btn btn-outline-dark">Finalizar Corrida</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -211,5 +279,8 @@ session_start();
 
         <script src="../content/bootstrap/script/bootstrap.min.js"></script>
         <script src="../content/scripts/modalClient.js"></script>
+        <script src="../content/scripts/registerClient.js"></script>
+        <script src="../content/scripts/verPedido.js"></script>
+        <script src="../content/scripts/listTrip.js"></script>
     </body>
 </html>

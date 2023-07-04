@@ -2,8 +2,10 @@
 
 require_once '../model/UserRepository.php';
 include_once '../model/User.php';
-include_once '../model/BuscarCliente.php';
 require_once '../model/Pedido.php';
+include_once '../model/Viagem.php';
+require_once '../model/Viatura.php';
+require_once '../model/CategoriaViatura.php';
 
 class UserController {
 
@@ -41,6 +43,23 @@ class UserController {
     public function iniciarViagem($id_motorista, $id_pedido){
         $this->userRepository->iniciarCorrida($id_motorista, $id_pedido);
     }
+    
+    public function verPedidoAceite(){
+        return $this->userRepository->verPedido();
+    }
+    
+    public function verFinalizado($id_pedido){
+        return $this->userRepository->finalizarViagem($id_pedido);
+    }
+    
+    public function inserirAutomovel(Viatura $viatura){
+        $this->userRepository->inserirViatura($viatura);
+    }
+    
+    public function inserirCategoria(CategoriaViatura $categoria_viatura){
+        $this->userRepository->inserirCategoriaViatura($categoria_viatura);
+    }
+   
 
     public function entrar($email, $password) {
         $user = $this->userRepository->login($email, $password);
